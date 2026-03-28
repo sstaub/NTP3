@@ -3,7 +3,7 @@ The **NTP3** library allows you to receive time information from the Internet. I
 different timezones and daylight saving time (DST).
 This NTP library uses the functions of the time.h standard library.
 
-The new library was necessary for use on Raspberry Pico W and Pico 2W because there is an internal NTP library in the earlePhilhower arduino-pico core. 
+The new library was necessary for use on Raspberry Pico W and Pico 2W because there is an internal NTP library in the earlephilhower arduino-pico core. 
 
 On Espressif (ESP32, ESP8266), the library automatically synchronizes the system RTC with NTP time, making standard C time functions available for use.
 
@@ -65,7 +65,7 @@ Example for WIFI boards like ESP32 or MKR1000, NANO RP2040 Connect and other, pr
 ```cpp
 // change next line to use with another board/shield
 //#include <ESP8266WiFi.h>
-//#include <WiFi.h> // for WiFi shield or ESP32
+//#include <WiFi.h> // for Raspberry Pi Pico (2) W, WiFi shield or ESP32
 //#include <WiFi101.h> // for WiFi 101 shield or MKR1000
 #include <WiFiNINA.h> // for UNO Wifi Rev 2 or Nano RP2040 connect
 //#include "WiFiUdp.h" // not needed for WiFiNINA
@@ -107,18 +107,18 @@ void loop() {
 ## Class Definitions
 
 ```cpp
-NTP(UDP& udp);
+NTP3(UDP& udp);
 ```
 Constructor for a NTP object
 
 Example, this should done before ```setup()```
 ```cpp
 WiFiUDP wifiUdp;
-NTP ntp(wifiUdp);
+NTP3 ntp(wifiUdp);
 ``` 
 
 ```cpp
-~NTP();
+~NTP3();
 ```
 Destructor for a NTP object
 
