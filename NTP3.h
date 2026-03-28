@@ -1,7 +1,7 @@
 /**
  * NTP library for Arduino framewoek
  * The MIT License (MIT)
- * (c) 2026 sstaub
+ * (c) 2026 sstaub and xorlent
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
