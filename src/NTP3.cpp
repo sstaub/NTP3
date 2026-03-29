@@ -84,9 +84,9 @@ bool NTP3::ntpUpdate() {
 	
 	// Capture send time for network delay compensation
 	#if defined(ESP32) || defined(ESP8266) || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_ARCH_SAMD)
-	uint32_t sendTime = micros();
+		uint32_t sendTime = micros();
 	#else
-	uint32_t sendTime = millis();
+		uint32_t sendTime = millis();
 	#endif
 	
 	udp->write(ntpRequest, NTP_PACKET_SIZE);
@@ -103,9 +103,9 @@ bool NTP3::ntpUpdate() {
 	
 	// Capture receive time for network delay compensation
 	#if defined(ESP32) || defined(ESP8266) || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_ARCH_SAMD)
-	uint32_t receiveTime = micros();
+		uint32_t receiveTime = micros();
 	#else
-	uint32_t receiveTime = millis();
+		uint32_t receiveTime = millis();
 	#endif
 	
 	lastUpdate = millis();
@@ -120,8 +120,7 @@ bool NTP3::ntpUpdate() {
 		}
 
 	// Read timestamp and fractional seconds from NTP response
-	uint32_t fraction = (uint32_t)ntpQuery[44] << 24 | (uint32_t)ntpQuery[45] << 16 | 
-	                    (uint32_t)ntpQuery[46] << 8 | (uint32_t)ntpQuery[47];
+	uint32_t fraction = (uint32_t)ntpQuery[44] << 24 | (uint32_t)ntpQuery[45] << 16 | (uint32_t)ntpQuery[46] << 8 | (uint32_t)ntpQuery[47];
 	
 	#ifdef __AVR__
  		unsigned long highWord = word(ntpQuery[40], ntpQuery[41]);
@@ -174,43 +173,43 @@ bool NTP3::ntpUpdate() {
 void NTP3::compensateNetworkDelay(uint32_t sendTime, uint32_t receiveTime, uint32_t& timestamp, uint32_t& fraction) {
 	// Calculate round-trip delay
 	#if defined(ESP32) || defined(ESP8266) || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_ARCH_SAMD)
-	// sendTime and receiveTime are in microseconds
-	uint32_t roundTripUs = receiveTime - sendTime;
-	lastRoundTripDelay = roundTripUs;  // Store for retrieval
-	uint32_t oneWayUs = roundTripUs / 2;  // Assume symmetric network delay
+		// sendTime and receiveTime are in microseconds
+		uint32_t roundTripUs = receiveTime - sendTime;
+		lastRoundTripDelay = roundTripUs;  // Store for retrieval
+		uint32_t oneWayUs = roundTripUs / 2;  // Assume symmetric network delay
 	
-	// Add one-way delay to the timestamp
-	// Convert microseconds to NTP fraction (2^32 / 1,000,000)
-	uint64_t delayFraction = ((uint64_t)oneWayUs * 4294967296ULL) / 1000000ULL;
-	uint64_t adjustedFraction = (uint64_t)fraction + delayFraction;
+		// Add one-way delay to the timestamp
+		// Convert microseconds to NTP fraction (2^32 / 1,000,000)
+		uint64_t delayFraction = ((uint64_t)oneWayUs * 4294967296ULL) / 1000000ULL;
+		uint64_t adjustedFraction = (uint64_t)fraction + delayFraction;
 	
-	// Handle fraction overflow into seconds
-	if (adjustedFraction >= 4294967296ULL) {
-		timestamp++;
-		adjustedFraction -= 4294967296ULL;
-	}
-	fraction = (uint32_t)adjustedFraction;
+		// Handle fraction overflow into seconds
+		if (adjustedFraction >= 4294967296ULL) {
+			timestamp++;
+			adjustedFraction -= 4294967296ULL;
+		}
+		fraction = (uint32_t)adjustedFraction;
 	
 	#else
-	// sendTime and receiveTime are in milliseconds  
-	uint32_t roundTripMs = receiveTime - sendTime;
-	lastRoundTripDelay = roundTripMs;  // Store for retrieval
-	uint32_t oneWayMs = roundTripMs / 2;  // Assume symmetric network delay
-	
-	// Convert NTP fraction to milliseconds first
-	uint16_t fractionMs = (uint16_t)(fraction / 4294967UL);
-	
-	// Add one-way delay in milliseconds
-	uint32_t totalMs = fractionMs + oneWayMs;
-	
-	// Handle overflow into seconds (32-bit)
-	while (totalMs >= 1000) {
-		timestamp++;
-		totalMs -= 1000;
-	}
-	
-	// Convert back to NTP fraction: ms * 2^32 / 1000
-	fraction = totalMs * 4294967UL;
+		// sendTime and receiveTime are in milliseconds  
+		uint32_t roundTripMs = receiveTime - sendTime;
+		lastRoundTripDelay = roundTripMs;  // Store for retrieval
+		uint32_t oneWayMs = roundTripMs / 2;  // Assume symmetric network delay
+
+		// Convert NTP fraction to milliseconds first
+		uint16_t fractionMs = (uint16_t)(fraction / 4294967UL);
+
+		// Add one-way delay in milliseconds
+		uint32_t totalMs = fractionMs + oneWayMs;
+
+		// Handle overflow into seconds (32-bit)
+		while (totalMs >= 1000) {
+			timestamp++;
+			totalMs -= 1000;
+			}
+
+		// Convert back to NTP fraction: ms * 2^32 / 1000
+		fraction = totalMs * 4294967UL;
 	#endif
 	
 	// Update ntpMilliseconds from compensated fraction
@@ -222,9 +221,9 @@ void NTP3::updateInterval(uint32_t interval) {
 	}
 
 #if defined(ESP32) || defined(ESP8266)
-void NTP3::syncRTC(bool enable) {
-	syncSystemRTC = enable;
-	}
+	void NTP3::syncRTC(bool enable) {
+		syncSystemRTC = enable;
+		}
 #endif
 
 void NTP3::ruleDST(const char* tzName, int8_t week, int8_t wday, int8_t month, int8_t hour, int tzOffset) {
@@ -481,10 +480,10 @@ bool NTP3::isValid() {
 
 float NTP3::roundTripDelay() {
 	#if defined(ESP32) || defined(ESP8266) || defined(ARDUINO_ARCH_RP2040) || defined(ARDUINO_ARCH_SAMD)
-	// Convert microseconds to milliseconds
-	return lastRoundTripDelay / 1000.0;
+		// Convert microseconds to milliseconds
+		return lastRoundTripDelay / 1000.0;
 	#else
-	// Already in milliseconds
-	return (float)lastRoundTripDelay;
+		// Already in milliseconds
+		return (float)lastRoundTripDelay;
 	#endif
 	}
